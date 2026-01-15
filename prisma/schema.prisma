@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PlanType {
+  free
+  basic
+  premium
+  exclusive
+}
+
+enum EventStatus {
+  draft
+  published
+}
+
+enum AddonType {
+  extra_rsvp
+  extra_gallery
+  remove_watermark
+  custom_domain
+  qr_checkin
+  background_music
+  guestbook
+  export_rsvp
+  custom_theme
+  template_pack
+}
+
+enum TemplateAccess {
+  starter
+  classic
+  premium
+  all
+}
+
+model Event {
+  id          String       @id @default(cuid())
+  ownerId     String
+  slug        String       @unique
+  planType    PlanType
+  status      EventStatus  @default(draft)
+  brideName   String
+  groomName   String
+  eventDate   DateTime
+  city        String
+  venue       String
+  templateKey String       @default("starter-01")
+  themeJson   Json?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  addons      EventAddon[]
+  rsvps       RSVP[]
+  gallery     GalleryItem[]
+}
+
+model EventAddon {
+  id             String         @id @default(cuid())
+  eventId        String
+  type           AddonType
+  amount         Int?
+  templateAccess TemplateAccess?
+  createdAt      DateTime       @default(now())
+
+  event          Event          @relation(fields: [eventId], references: [id])
+
+  @@index([eventId])
+}
+
+model RSVP {
+  id        String   @id @default(cuid())
+  eventId   String
+  name      String
+  email     String?
+  guests    Int      @default(1)
+  message   String?
+  createdAt DateTime @default(now())
+
+  event     Event    @relation(fields: [eventId], references: [id])
+
+  @@index([eventId])
+}
+
+model GalleryItem {
+  id        String   @id @default(cuid())
+  eventId   String
+  imageUrl  String
+  caption   String?
+  createdAt DateTime @default(now())
+
+  event     Event    @relation(fields: [eventId], references: [id])
+
+  @@index([eventId])
+}
