@@ -16,12 +16,19 @@ SaaS wedding website builder with one-time event pricing, plan-based feature lim
    ```bash
    npm install
    ```
-2. Configure `.env` with your `DATABASE_URL`.
-3. Generate Prisma client:
+2. Start Postgres via Docker:
+   ```bash
+   docker compose up -d
+   ```
+3. Configure `.env` with your `DATABASE_URL`, for example:
+   ```bash
+   DATABASE_URL="postgresql://postgres:postgres@localhost:5432/nikah?schema=public"
+   ```
+4. Generate Prisma client:
    ```bash
    npx prisma generate
    ```
-4. Run the dev server:
+5. Run the dev server:
    ```bash
    npm run dev
    ```
