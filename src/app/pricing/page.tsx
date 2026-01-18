@@ -4,6 +4,8 @@ import { pricingPlans } from "@/config/pricing";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/site/footer";
+import { formatRupiah } from "@/lib/utils";
+import { MidtransCheckoutButton } from "@/components/payments/midtrans-button";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -16,7 +18,7 @@ export default function PricingPage() {
       <main className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 pb-24 pt-16">
         <header className="flex flex-col gap-4 text-center">
           <span className="text-sm uppercase tracking-[0.3em] text-black/50">
-            One-time payment
+            One-time payment in Rupiah (IDR)
           </span>
           <h1 className="text-4xl font-semibold md:text-5xl font-[var(--font-display)]">
             Pricing
@@ -34,7 +36,9 @@ export default function PricingPage() {
                 <p className="text-sm uppercase tracking-[0.2em] text-black/40">
                   {plan.name}
                 </p>
-                <h2 className="text-3xl font-semibold">${plan.price}</h2>
+                <h2 className="text-3xl font-semibold">
+                  {formatRupiah(plan.price)}
+                </h2>
                 <p className="text-sm text-black/60">{plan.tagline}</p>
               </div>
               <ul className="space-y-2 text-sm text-black/70">
@@ -48,7 +52,15 @@ export default function PricingPage() {
                   {plan.features.customDomain ? "Custom domain" : "Default domain"}
                 </li>
               </ul>
-              <Button className="mt-auto">Select {plan.name}</Button>
+              {plan.price === 0 ? (
+                <Button className="mt-auto" asChild>
+                  <Link href="/dashboard">Start free</Link>
+                </Button>
+              ) : (
+                <MidtransCheckoutButton className="mt-auto" planId={plan.id}>
+                  Select {plan.name}
+                </MidtransCheckoutButton>
+              )}
             </Card>
           ))}
         </section>
@@ -59,6 +71,7 @@ export default function PricingPage() {
             Add extra RSVP seats, gallery slots, QR check-in, or custom domains
             anytime after you publish.
           </p>
+          <p>Payments are processed securely via Midtrans.</p>
           <Button variant="ghost" asChild>
             <Link href="/dashboard">Manage your events</Link>
           </Button>

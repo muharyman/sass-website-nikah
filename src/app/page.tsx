@@ -4,6 +4,8 @@ import { pricingPlans } from "@/config/pricing";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { SiteFooter } from "@/components/site/footer";
+import { formatRupiah } from "@/lib/utils";
+import { MidtransCheckoutButton } from "@/components/payments/midtrans-button";
 
 export default function Home() {
   return (
@@ -19,7 +21,7 @@ export default function Home() {
             </h1>
             <p className="text-lg text-black/70">
               Launch a stunning wedding page with RSVP, gallery, guestbook, and
-              custom themes. One payment, per event. No subscriptions.
+              custom themes. One payment in Rupiah (IDR), per event. No subscriptions.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <Button>Start your first event</Button>
@@ -102,7 +104,9 @@ export default function Home() {
                   <p className="text-sm uppercase tracking-[0.2em] text-black/40">
                     {plan.name}
                   </p>
-                  <h3 className="text-2xl font-semibold">${plan.price}</h3>
+                  <h3 className="text-2xl font-semibold">
+                    {formatRupiah(plan.price)}
+                  </h3>
                   <p className="text-sm text-black/60">{plan.tagline}</p>
                 </div>
                 <ul className="text-sm text-black/70">
@@ -112,7 +116,15 @@ export default function Home() {
                     {plan.features.customTheme ? "Custom themes" : "Preset themes"}
                   </li>
                 </ul>
-                <Button>Choose {plan.name}</Button>
+                {plan.price === 0 ? (
+                  <Button asChild>
+                    <Link href="/dashboard">Start free</Link>
+                  </Button>
+                ) : (
+                  <MidtransCheckoutButton planId={plan.id}>
+                    Choose {plan.name}
+                  </MidtransCheckoutButton>
+                )}
               </Card>
             ))}
           </div>
