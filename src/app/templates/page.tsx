@@ -4,20 +4,13 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/site/footer";
+import { templatePreviews } from "@/lib/template-previews";
+import { basePalettes } from "@/config/theme";
 
 export const metadata: Metadata = {
   title: "Templates",
   description: "Browse wedding website templates optimized for SEO and speed.",
 };
-
-const templateList = [
-  { name: "Luminous", style: "Modern editorial" },
-  { name: "Harmoni", style: "Warm minimal" },
-  { name: "Sakura", style: "Romantic floral" },
-  { name: "Savana", style: "Sunset cinematic" },
-  { name: "Heritage", style: "Classic elegance" },
-  { name: "Selaras", style: "Soft pastel" },
-];
 
 export default function TemplatesPage() {
   return (
@@ -55,11 +48,58 @@ export default function TemplatesPage() {
           />
         </Card>
 
+        <section className="grid gap-4 rounded-3xl border border-black/10 bg-white/80 p-6">
+          <h2 className="text-xl font-semibold">Base color palettes</h2>
+          <p className="text-sm text-black/60">
+            Start with elegant blue by default, then switch to another palette
+            when you customize your event.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            {basePalettes.map((palette) => (
+              <div
+                key={palette.name}
+                className="flex items-center gap-3 rounded-full border border-black/10 bg-white/90 px-4 py-2 text-sm"
+              >
+                <span
+                  className="h-4 w-4 rounded-full border border-black/10"
+                  style={{ backgroundColor: palette.value }}
+                />
+                <span className="font-medium">
+                  {palette.name}
+                  {palette.isDefault ? " (default)" : ""}
+                </span>
+              </div>
+            ))}
+          </div>
+        </section>
+
         <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {templateList.map((template) => (
-            <Card key={template.name} className="flex flex-col gap-2">
-              <h3 className="text-lg font-semibold">{template.name}</h3>
-              <p className="text-sm text-black/60">{template.style}</p>
+          {templatePreviews.map((template) => (
+            <Card key={template.slug} className="flex flex-col gap-4">
+              <div
+                className="h-40 rounded-2xl border border-black/10"
+                style={{
+                  background: `linear-gradient(135deg, ${template.palette.background}, ${template.palette.base})`,
+                }}
+              />
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-semibold">{template.name}</h3>
+                  <p className="text-sm text-black/60">{template.style}</p>
+                </div>
+                <div className="flex gap-2">
+                  {[template.palette.base, template.palette.accent].map((color) => (
+                    <span
+                      key={color}
+                      className="h-4 w-4 rounded-full border border-black/10"
+                      style={{ backgroundColor: color }}
+                    />
+                  ))}
+                </div>
+              </div>
+              <Button variant="ghost" asChild>
+                <Link href={`/templates/${template.slug}`}>Preview template</Link>
+              </Button>
             </Card>
           ))}
         </section>
