@@ -50,7 +50,7 @@ export default async function WeddingPage({ params }: PageProps) {
           {new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).format(
             event.eventDate
           )}{" "}
-          · {event.city} · {event.venue}
+          di {event.city} di {event.venue}
         </p>
       </header>
 
