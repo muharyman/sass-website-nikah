@@ -22,7 +22,7 @@ export const pricingPlans: PlanConfig[] = [
   {
     id: "basic",
     name: "Basic",
-    price: 39,
+    price: 149000,
     tagline: "Simple, elegant, ready",
     features: {
       rsvpLimit: 150,
@@ -40,7 +40,7 @@ export const pricingPlans: PlanConfig[] = [
   {
     id: "premium",
     name: "Premium",
-    price: 89,
+    price: 299000,
     tagline: "Most-loved for full events",
     features: {
       rsvpLimit: 400,
@@ -58,7 +58,7 @@ export const pricingPlans: PlanConfig[] = [
   {
     id: "exclusive",
     name: "Exclusive",
-    price: 189,
+    price: 599000,
     tagline: "Everything unlocked",
     features: {
       rsvpLimit: 1000,
