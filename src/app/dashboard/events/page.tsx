@@ -39,8 +39,14 @@ export default async function EventsPage() {
                 <p className="text-sm text-black/50">
                   {event.status} - {event.planType}
                 </p>
+                <p className="text-xs text-black/40">/{event.slug}</p>
               </div>
               <div className="flex items-center gap-3">
+                <Button variant="ghost" asChild>
+                  <Link href={`/${event.slug}`} target="_blank">
+                    Open page
+                  </Link>
+                </Button>
                 <Button variant="ghost" asChild>
                   <Link href={`/dashboard/events/${event.id}/editor`}>Editor</Link>
                 </Button>
