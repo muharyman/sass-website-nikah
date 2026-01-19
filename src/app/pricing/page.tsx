@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { SiteFooter } from "@/components/site/footer";
 import { formatRupiah } from "@/lib/utils";
 import { MidtransCheckoutButton } from "@/components/payments/midtrans-button";
+import { getSession } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -52,15 +53,7 @@ export default function PricingPage() {
                   {plan.features.customDomain ? "Custom domain" : "Default domain"}
                 </li>
               </ul>
-              {plan.price === 0 ? (
-                <Button className="mt-auto" asChild>
-                  <Link href="/dashboard">Start free</Link>
-                </Button>
-              ) : (
-                <MidtransCheckoutButton className="mt-auto" planId={plan.id}>
-                  Select {plan.name}
-                </MidtransCheckoutButton>
-              )}
+              <PricingActions plan={plan} />
             </Card>
           ))}
         </section>
@@ -79,5 +72,34 @@ export default function PricingPage() {
       </main>
       <SiteFooter />
     </>
+  );
+}
+
+type PricingActionsProps = {
+  plan: (typeof pricingPlans)[number];
+};
+
+async function PricingActions({ plan }: PricingActionsProps) {
+  const session = await getSession();
+
+  if (!session) {
+    return (
+      <Button className="mt-auto" asChild>
+        <Link href="/register">Create account</Link>
+      </Button>
+    );
+  }
+
+  return (
+    <div className="mt-auto flex flex-col gap-2">
+      {plan.price === 0 ? null : (
+        <MidtransCheckoutButton planId={plan.id} variant="ghost">
+          Pay with Midtrans
+        </MidtransCheckoutButton>
+      )}
+      <Button asChild>
+        <Link href={`/onboarding?plan=${plan.id}`}>Select {plan.name}</Link>
+      </Button>
+    </div>
   );
 }

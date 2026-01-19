@@ -24,7 +24,9 @@ export default function Home() {
               custom themes. One payment in Rupiah (IDR), per event. No subscriptions.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button>Start your first event</Button>
+              <Button asChild>
+                <Link href="/register">Start your first event</Link>
+              </Button>
               <Button variant="ghost" asChild>
                 <Link href="/pricing">View pricing</Link>
               </Button>
@@ -85,6 +87,44 @@ export default function Home() {
             <Button variant="ghost" asChild>
               <Link href="/templates">Browse all templates</Link>
             </Button>
+          </div>
+        </section>
+
+        <section className="grid gap-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-3xl font-semibold font-[var(--font-display)]">
+              Real wedding pages
+            </h2>
+            <Button variant="ghost" asChild>
+              <Link href="/templates">Explore templates</Link>
+            </Button>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              {
+                name: "Alya & Reza",
+                style: "Modern editorial",
+                link: "/templates/luminous",
+              },
+              {
+                name: "Nadia & Fajar",
+                style: "Warm minimal",
+                link: "/templates/harmoni",
+              },
+              {
+                name: "Maya & Dimas",
+                style: "Sunset cinematic",
+                link: "/templates/savana",
+              },
+            ].map((event) => (
+              <Card key={event.name} className="flex flex-col gap-3">
+                <h3 className="text-lg font-semibold">{event.name}</h3>
+                <p className="text-sm text-black/60">{event.style}</p>
+                <Button variant="ghost" asChild>
+                  <Link href={event.link}>View page</Link>
+                </Button>
+              </Card>
+            ))}
           </div>
         </section>
 
