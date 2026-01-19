@@ -2,6 +2,7 @@ import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { slugify } from "@/lib/slug";
+import { requireSession } from "@/lib/auth";
 
 type EventPayload = {
   brideName?: string;
@@ -26,6 +27,7 @@ function normalizePlanType(value?: string) {
 
 export async function POST(request: Request) {
   try {
+    const session = await requireSession();
     const body = (await request.json()) as EventPayload;
     const brideName = body.brideName?.trim() ?? "";
     const groomName = body.groomName?.trim() ?? "";
@@ -45,7 +47,7 @@ export async function POST(request: Request) {
 
     const event = await prisma.event.create({
       data: {
-        ownerId: "local",
+        ownerId: session.userId,
         slug,
         planType: normalizePlanType(body.planType),
         status: "draft",
