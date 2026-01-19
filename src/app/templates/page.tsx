@@ -73,6 +73,17 @@ export default function TemplatesPage() {
           </div>
         </section>
 
+        <section className="grid gap-3 rounded-3xl border border-black/10 bg-white/80 p-6 text-sm text-black/60">
+          <h2 className="text-xl font-semibold text-black">Need a custom build?</h2>
+          <p>
+            If you want a fully custom theme, contact our team and we will help
+            you design it.
+          </p>
+          <Button variant="ghost" asChild>
+            <Link href="mailto:hello@nikah-studio.example">Contact us</Link>
+          </Button>
+        </section>
+
         <section className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {templatePreviews.map((template) => (
             <Card key={template.slug} className="flex flex-col gap-4">
