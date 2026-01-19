@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { getFeatureFlags } from "@/lib/features";
 import { canAddRsvp } from "@/lib/plans";
 import { RsvpForm } from "@/components/dashboard/rsvp-form";
+import { requireSession } from "@/lib/auth";
 
 type PageProps = {
   params: Promise<{ id?: string }>;
@@ -18,6 +19,7 @@ export default async function RsvpDashboardPage({ params }: PageProps) {
     notFound();
   }
 
+  const session = await requireSession();
   const event = await prisma.event.findUnique({
     where: { id },
     include: {
@@ -28,6 +30,10 @@ export default async function RsvpDashboardPage({ params }: PageProps) {
   });
 
   if (!event) {
+    notFound();
+  }
+
+  if (event.ownerId && event.ownerId !== session.userId) {
     notFound();
   }
 
@@ -50,6 +56,9 @@ export default async function RsvpDashboardPage({ params }: PageProps) {
           <h1 className="text-3xl font-semibold">RSVP List</h1>
           <p className="text-black/60">
             {featureFlags.rsvpUsed}/{featureFlags.rsvpLimit} seats used.
+          </p>
+          <p className="text-sm text-black/50">
+            Public RSVP link: /{event.slug}/rsvp
           </p>
         </div>
         <Button variant="ghost" asChild>

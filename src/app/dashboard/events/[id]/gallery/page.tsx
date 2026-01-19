@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { canAddGalleryItem } from "@/lib/plans";
 import { getFeatureFlags } from "@/lib/features";
 import { GalleryForm } from "@/components/dashboard/gallery-form";
+import { requireSession } from "@/lib/auth";
 
 type PageProps = {
   params: Promise<{ id?: string }>;
@@ -18,6 +19,7 @@ export default async function GalleryPage({ params }: PageProps) {
     notFound();
   }
 
+  const session = await requireSession();
   const event = await prisma.event.findUnique({
     where: { id },
     include: {
@@ -28,6 +30,10 @@ export default async function GalleryPage({ params }: PageProps) {
   });
 
   if (!event) {
+    notFound();
+  }
+
+  if (event.ownerId && event.ownerId !== session.userId) {
     notFound();
   }
 

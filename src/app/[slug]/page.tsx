@@ -1,7 +1,10 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { buildWeddingMetadata } from "@/lib/seo";
 import { getWeddingBySlug } from "@/lib/weddings";
+import { getSession } from "@/lib/auth";
+import { Button } from "@/components/ui/button";
 
 type PageProps = {
   params: Promise<{ slug?: string }>;
@@ -13,9 +16,14 @@ export async function generateMetadata({ params }: PageProps) {
   if (!slug) {
     return {};
   }
+  const session = await getSession();
   const event = await getWeddingBySlug(slug);
 
   if (!event) {
+    return {};
+  }
+
+  if (event.status !== "published" && event.ownerId !== session?.userId) {
     return {};
   }
 
@@ -39,9 +47,14 @@ export default async function WeddingPage({ params }: PageProps) {
   if (!slug) {
     notFound();
   }
+  const session = await getSession();
   const event = await getWeddingBySlug(slug);
 
   if (!event) {
+    notFound();
+  }
+
+  if (event.status !== "published" && event.ownerId !== session?.userId) {
     notFound();
   }
 
@@ -60,6 +73,11 @@ export default async function WeddingPage({ params }: PageProps) {
           )}{" "}
           di {event.city} di {event.venue}
         </p>
+        <div className="mt-6 flex justify-center">
+          <Button asChild>
+            <Link href={`/${event.slug}/rsvp`}>RSVP</Link>
+          </Button>
+        </div>
       </header>
 
       <section className="grid gap-6 md:grid-cols-2">

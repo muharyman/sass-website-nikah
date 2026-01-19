@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getFeatureFlags } from "@/lib/features";
 import { canAddGalleryItem } from "@/lib/plans";
+import { requireSession } from "@/lib/auth";
 
 export const runtime = "nodejs";
 
@@ -21,6 +22,7 @@ export async function POST(request: Request, { params }: PageProps) {
     return NextResponse.json({ error: "Missing event id" }, { status: 400 });
   }
 
+  const session = await requireSession();
   const body = (await request.json()) as GalleryPayload;
   const imageUrl = body.imageUrl?.trim() ?? "";
 
@@ -38,6 +40,10 @@ export async function POST(request: Request, { params }: PageProps) {
 
   if (!event) {
     return NextResponse.json({ error: "Event not found" }, { status: 404 });
+  }
+
+  if (event.ownerId && event.ownerId !== session.userId) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   const addons = event.addons.map((addon) => ({

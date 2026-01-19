@@ -18,9 +18,10 @@ export default async function OpengraphImage({ params }: PageProps) {
   const { slug } = params;
   const event = await getWeddingBySlug(slug);
 
-  const title = event
-    ? `${event.brideName} & ${event.groomName}`
-    : "Wedding Invitation";
+  const title =
+    event && event.status === "published"
+      ? `${event.brideName} & ${event.groomName}`
+      : "Wedding Invitation";
 
   return new ImageResponse(
     (
@@ -53,7 +54,9 @@ export default async function OpengraphImage({ params }: PageProps) {
           </div>
           <div style={{ fontSize: 64, fontWeight: 600 }}>{title}</div>
           <div style={{ fontSize: 24, color: "rgba(0,0,0,0.6)" }}>
-            {event ? `${event.city} di ${event.venue}` : "Save the date"}
+            {event && event.status === "published"
+              ? `${event.city} di ${event.venue}`
+              : "Save the date"}
           </div>
         </div>
       </div>
