@@ -5,16 +5,18 @@ import { Card } from "@/components/ui/card";
 import { prisma } from "@/lib/db";
 
 type PageProps = {
-  params: { id: string };
+  params: Promise<{ id?: string }>;
 };
 
 export default async function RsvpDashboardPage({ params }: PageProps) {
-  if (!params?.id) {
+  const { id } = await params;
+
+  if (!id) {
     notFound();
   }
 
   const event = await prisma.event.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: { rsvps: { orderBy: { createdAt: "desc" } } },
   });
 

@@ -7,16 +7,18 @@ import { canAddGalleryItem, canAddRsvp } from "@/lib/plans";
 import { prisma } from "@/lib/db";
 
 type PageProps = {
-  params: { id: string };
+  params: Promise<{ id?: string }>;
 };
 
 export default async function EventEditorPage({ params }: PageProps) {
-  if (!params?.id) {
+  const { id } = await params;
+
+  if (!id) {
     notFound();
   }
 
   const event = await prisma.event.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       addons: true,
       _count: { select: { rsvps: true, gallery: true } },
