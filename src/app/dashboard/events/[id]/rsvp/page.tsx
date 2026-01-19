@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { prisma } from "@/lib/db";
+import { getFeatureFlags } from "@/lib/features";
+import { canAddRsvp } from "@/lib/plans";
+import { RsvpForm } from "@/components/dashboard/rsvp-form";
 
 type PageProps = {
   params: Promise<{ id?: string }>;
@@ -17,24 +20,46 @@ export default async function RsvpDashboardPage({ params }: PageProps) {
 
   const event = await prisma.event.findUnique({
     where: { id },
-    include: { rsvps: { orderBy: { createdAt: "desc" } } },
+    include: {
+      addons: true,
+      rsvps: { orderBy: { createdAt: "desc" } },
+      _count: { select: { rsvps: true } },
+    },
   });
 
   if (!event) {
     notFound();
   }
 
+  const addons = event.addons.map((addon) => ({
+    type: addon.type,
+    amount: addon.amount ?? undefined,
+    templateAccess: addon.templateAccess ?? undefined,
+  }));
+
+  const featureFlags = getFeatureFlags(event.planType, addons, {
+    rsvpUsed: event._count.rsvps,
+  });
+
+  const canAdd = canAddRsvp(featureFlags);
+
   return (
     <div className="flex flex-col gap-6">
       <header className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-semibold">RSVP List</h1>
-          <p className="text-black/60">Track guest confirmations.</p>
+          <p className="text-black/60">
+            {featureFlags.rsvpUsed}/{featureFlags.rsvpLimit} seats used.
+          </p>
         </div>
         <Button variant="ghost" asChild>
           <Link href="/dashboard/events">Back to events</Link>
         </Button>
       </header>
+
+      <Card className="p-6">
+        <RsvpForm eventId={event.id} canAdd={canAdd} />
+      </Card>
 
       <div className="grid gap-4">
         {event.rsvps.length === 0 ? (

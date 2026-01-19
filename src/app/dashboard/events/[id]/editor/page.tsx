@@ -60,9 +60,15 @@ export default async function EventEditorPage({ params }: PageProps) {
           <p className="text-sm text-black/60">
             {featureFlags.galleryUsed}/{featureFlags.galleryLimit} photos used.
           </p>
-          <Button disabled={!canAddGalleryItem(featureFlags)}>
-            Add gallery photos
-          </Button>
+          {canAddGalleryItem(featureFlags) ? (
+            <Button asChild>
+              <Link href={`/dashboard/events/${event.id}/gallery`}>
+                Add gallery photos
+              </Link>
+            </Button>
+          ) : (
+            <Button disabled>Add gallery photos</Button>
+          )}
           {!canAddGalleryItem(featureFlags) && (
             <p className="text-sm text-black/50">
               Gallery limit reached. Upgrade or buy an add-on.
@@ -75,7 +81,13 @@ export default async function EventEditorPage({ params }: PageProps) {
           <p className="text-sm text-black/60">
             {featureFlags.rsvpUsed}/{featureFlags.rsvpLimit} seats used.
           </p>
-          <Button disabled={!canAddRsvp(featureFlags)}>Invite guests</Button>
+          {canAddRsvp(featureFlags) ? (
+            <Button asChild>
+              <Link href={`/dashboard/events/${event.id}/rsvp`}>Invite guests</Link>
+            </Button>
+          ) : (
+            <Button disabled>Invite guests</Button>
+          )}
           {!canAddRsvp(featureFlags) && (
             <p className="text-sm text-black/50">
               RSVP limit reached. Upgrade or add more seats.
