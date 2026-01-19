@@ -1,14 +1,18 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { requireSession } from "@/lib/auth";
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const session = await requireSession();
+
   return (
     <div className="flex flex-col gap-6">
       <header className="flex flex-col gap-3">
         <h1 className="text-3xl font-semibold">Dashboard</h1>
         <p className="text-black/60">
-          Track your events, manage add-ons, and monitor RSVP totals.
+          Signed in as {session.email}. Track your events, manage add-ons, and
+          monitor RSVP totals.
         </p>
       </header>
       <div className="grid gap-6 md:grid-cols-2">

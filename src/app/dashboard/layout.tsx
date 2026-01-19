@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
+import { LogoutButton } from "@/components/dashboard/logout-button";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -26,6 +27,7 @@ export default function DashboardLayout({
             <Link className="hover:text-black" href="/dashboard/events">
               Events
             </Link>
+            <LogoutButton />
           </nav>
         </div>
       </header>

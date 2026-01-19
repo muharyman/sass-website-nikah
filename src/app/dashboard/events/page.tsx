@@ -2,9 +2,12 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/db";
+import { requireSession } from "@/lib/auth";
 
 export default async function EventsPage() {
+  const session = await requireSession();
   const events = await prisma.event.findMany({
+    where: { ownerId: session.userId },
     orderBy: { createdAt: "desc" },
   });
 

@@ -47,7 +47,7 @@ enum TemplateAccess {
 
 model Event {
   id          String       @id @default(cuid())
-  ownerId     String
+  ownerId     String?
   slug        String       @unique
   planType    PlanType
   status      EventStatus  @default(draft)
@@ -61,9 +61,19 @@ model Event {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
 
+  owner       User?        @relation(fields: [ownerId], references: [id])
   addons      EventAddon[]
   rsvps       RSVP[]
   gallery     GalleryItem[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  events       Event[]
 }
 
 model EventAddon {
