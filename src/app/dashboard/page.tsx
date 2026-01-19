@@ -17,7 +17,9 @@ export default function DashboardPage() {
           <p className="text-sm text-black/60">
             Launch a new wedding website in minutes.
           </p>
-          <Button>Start event</Button>
+          <Button asChild>
+            <Link href="/dashboard/events/new">Start event</Link>
+          </Button>
         </Card>
         <Card className="flex flex-col gap-4">
           <h2 className="text-lg font-semibold">Manage events</h2>
