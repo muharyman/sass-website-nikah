@@ -29,6 +29,10 @@ SaaS wedding website builder with one-time event pricing, plan-based feature lim
    MIDTRANS_SERVER_KEY="YOUR_SERVER_KEY"
    MIDTRANS_IS_PRODUCTION="false"
    ```
+   Add auth secret for sessions:
+   ```bash
+   AUTH_SECRET="YOUR_LONG_RANDOM_SECRET"
+   ```
 4. Generate Prisma client:
    ```bash
    npx prisma generate
