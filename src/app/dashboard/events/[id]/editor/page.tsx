@@ -11,6 +11,10 @@ type PageProps = {
 };
 
 export default async function EventEditorPage({ params }: PageProps) {
+  if (!params?.id) {
+    notFound();
+  }
+
   const event = await prisma.event.findUnique({
     where: { id: params.id },
     include: {

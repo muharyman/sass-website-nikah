@@ -9,6 +9,10 @@ type PageProps = {
 };
 
 export default async function RsvpDashboardPage({ params }: PageProps) {
+  if (!params?.id) {
+    notFound();
+  }
+
   const event = await prisma.event.findUnique({
     where: { id: params.id },
     include: { rsvps: { orderBy: { createdAt: "desc" } } },
