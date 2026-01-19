@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -70,14 +69,12 @@ export default async function GalleryPage({ params }: PageProps) {
         ) : (
           event.gallery.map((item) => (
             <Card key={item.id} className="overflow-hidden">
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={item.imageUrl}
                 alt={item.caption ?? "Gallery image"}
-                width={640}
-                height={360}
                 className="h-48 w-full object-cover"
-                unoptimized
-                loader={({ src }) => src}
+                loading="lazy"
               />
               <div className="p-4 text-sm text-black/60">
                 {item.caption || "No caption"}
