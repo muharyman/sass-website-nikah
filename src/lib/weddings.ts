@@ -5,6 +5,7 @@ export async function getWeddingBySlug(slug: string) {
     where: { slug },
     include: {
       addons: true,
+      gallery: true,
       _count: {
         select: {
           rsvps: true,

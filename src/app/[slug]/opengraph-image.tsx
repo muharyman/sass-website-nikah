@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getWeddingBySlug } from "@/lib/weddings";
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 export const size = {
   width: 1200,
@@ -53,7 +53,7 @@ export default async function OpengraphImage({ params }: PageProps) {
           </div>
           <div style={{ fontSize: 64, fontWeight: 600 }}>{title}</div>
           <div style={{ fontSize: 24, color: "rgba(0,0,0,0.6)" }}>
-            {event ? `${event.city} · ${event.venue}` : "Save the date"}
+            {event ? `${event.city} di ${event.venue}` : "Save the date"}
           </div>
         </div>
       </div>
