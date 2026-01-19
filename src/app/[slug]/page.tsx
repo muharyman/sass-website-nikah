@@ -4,11 +4,15 @@ import { buildWeddingMetadata } from "@/lib/seo";
 import { getWeddingBySlug } from "@/lib/weddings";
 
 type PageProps = {
-  params: { slug: string };
+  params: Promise<{ slug?: string }>;
 };
 
 export async function generateMetadata({ params }: PageProps) {
-  const { slug } = params;
+  const { slug } = await params;
+
+  if (!slug) {
+    return {};
+  }
   const event = await getWeddingBySlug(slug);
 
   if (!event) {
@@ -30,7 +34,11 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function WeddingPage({ params }: PageProps) {
-  const { slug } = params;
+  const { slug } = await params;
+
+  if (!slug) {
+    notFound();
+  }
   const event = await getWeddingBySlug(slug);
 
   if (!event) {
