@@ -1,22 +1,38 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { getFeatureFlags } from "@/lib/features";
 import { canAddGalleryItem, canAddRsvp } from "@/lib/plans";
+import { prisma } from "@/lib/db";
 
-const sampleEvent = {
-  id: "evt_01",
-  planType: "basic" as const,
-  addons: [{ type: "extra_gallery" as const, amount: 30 }],
-  usage: { rsvpUsed: 120, galleryUsed: 58 },
+type PageProps = {
+  params: { id: string };
 };
 
-export default function EventEditorPage() {
-  const featureFlags = getFeatureFlags(
-    sampleEvent.planType,
-    sampleEvent.addons,
-    sampleEvent.usage
-  );
+export default async function EventEditorPage({ params }: PageProps) {
+  const event = await prisma.event.findUnique({
+    where: { id: params.id },
+    include: {
+      addons: true,
+      _count: { select: { rsvps: true, gallery: true } },
+    },
+  });
+
+  if (!event) {
+    notFound();
+  }
+
+  const addons = event.addons.map((addon) => ({
+    type: addon.type,
+    amount: addon.amount ?? undefined,
+    templateAccess: addon.templateAccess ?? undefined,
+  }));
+
+  const featureFlags = getFeatureFlags(event.planType, addons, {
+    rsvpUsed: event._count.rsvps,
+    galleryUsed: event._count.gallery,
+  });
 
   return (
     <div className="flex flex-col gap-6">
