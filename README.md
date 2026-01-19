@@ -24,6 +24,11 @@ SaaS wedding website builder with one-time event pricing, plan-based feature lim
    ```bash
    DATABASE_URL="postgresql://postgres:postgres@localhost:5432/nikah?schema=public"
    ```
+   Add Midtrans credentials for checkout:
+   ```bash
+   MIDTRANS_SERVER_KEY="YOUR_SERVER_KEY"
+   MIDTRANS_IS_PRODUCTION="false"
+   ```
 4. Generate Prisma client:
    ```bash
    npx prisma generate
@@ -63,3 +68,4 @@ Recommended: **Vercel + Neon (Postgres)** for fastest deploy and scaling.
 
 - Wedding pages are indexable only when published.
 - Dashboard routes are excluded from indexing.
+- Payments are processed via Midtrans Snap and use Rupiah (IDR).
