@@ -115,6 +115,29 @@ export const templatePreviews: TemplatePreview[] = [
       venue: "Meru Ballroom",
     },
   },
+  {
+    slug: "rimbun",
+    name: "Rimbun",
+    style: "Botanical layers",
+    palette: {
+      base: "#1f5b45",
+      accent: "#caa46a",
+      background: "#f5f3ee",
+    },
+    hero: {
+      title: "A garden promise",
+      subtitle: "Soft botanical textures with layered, organic sections.",
+    },
+    couple: {
+      bride: "Selma",
+      groom: "Irfan",
+    },
+    event: {
+      date: "Saturday, 14 December 2026",
+      city: "Malang",
+      venue: "Rimbun Estate",
+    },
+  },
 ];
 
 export function getTemplatePreview(slug: string) {
